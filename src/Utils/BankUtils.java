@@ -1,5 +1,6 @@
 package Utils;
 
+import Model.Account;
 import Model.Bank;
 import java.io.*;
 import java.util.Map;
@@ -9,16 +10,17 @@ public class BankUtils {
     private static final String FILE_NAME = "accounts.txt";
 
     public static void saveAccounts() {
-        Bank bank = Bank.getInstance();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            Bank bank = Bank.getInstance();
             for (Map.Entry<String, Account> entry : bank.getAccounts().entrySet()) {
                 Account account = entry.getValue();
-                writer.write(account.getAccountNumber() + "," +
-                            account.getName() + "," +
-                            account.getPhoneNumber() + "," +
-                            account.getNationalID() + "," +
-                            account.getAddress() + "," +
-                            account.getBalance());
+                writer.write(String.join(",",
+                        account.getAccountNumber(),
+                        account.getName(),
+                        account.getPhoneNumber(),
+                        account.getNationalID(),
+                        account.getAddress(),
+                        Double.toString(account.getBalance())));
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -27,14 +29,14 @@ public class BankUtils {
     }
 
     public static void loadAccounts() {
-        Bank bank = Bank.getInstance();
         File file = new File(FILE_NAME);
         if (!file.exists()) {
             return;
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
+            Bank bank = Bank.getInstance();
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 6) {
@@ -46,7 +48,7 @@ public class BankUtils {
                     double balance = Double.parseDouble(parts[5]);
 
                     Account account = new Account(accountNumber, name, phoneNumber, nationalID, address);
-                    account.setBalance(balance);
+                    account.deposit(balance); // Set the initial balance
                     bank.getAccounts().put(accountNumber, account);
                 }
             }

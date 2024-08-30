@@ -5,9 +5,9 @@ import Model.Bank;
 import Model.Account;
 
 public class WithdrawForm extends JFrame {
-    
     private JTextField accountNumberField;
     private JTextField amountField;
+
     public WithdrawForm() {
         setTitle("Withdraw");
         setSize(300, 200);
@@ -44,7 +44,7 @@ public class WithdrawForm extends JFrame {
 
         if (account != null) {
             if (account.withdraw(amount)) {
-                JOptionPane.showMessageDialog(this, "Withdrawal successful!");
+                JOptionPane.showMessageDialog(this, "Withdrawal successful! New balance: " + account.getBalance());
             } else {
                 JOptionPane.showMessageDialog(this, "Insufficient funds!");
             }

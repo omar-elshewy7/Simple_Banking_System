@@ -8,10 +8,10 @@ public class AccountForm extends JFrame {
     private JTextField phoneNumberField;
     private JTextField nationalIDField;
     private JTextField addressField;
-    
+
     public AccountForm() {
         setTitle("Create Account");
-        setSize(400,300);
+        setSize(450, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 

@@ -1,11 +1,11 @@
-package gui;
+package GUI;
 
 import javax.swing.*;
 
 public class App extends JFrame {
     public App() {
         setTitle("- Welcome to O6U Banking System -");
-        setSize(500, 400);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -24,7 +24,7 @@ public class App extends JFrame {
         JButton checkBalanceButton = new JButton("Check Balance");
         checkBalanceButton.addActionListener(e -> new BalanceForm());
 
-        JButton transferButton = new JButton("Transfer Money");
+        JButton transferButton = new JButton("Transfer Funds");
         transferButton.addActionListener(e -> new TransForm());
 
         panel.add(createAccountButton);
@@ -34,7 +34,6 @@ public class App extends JFrame {
         panel.add(transferButton);
 
         add(panel);
-
         setVisible(true);
     }
 }

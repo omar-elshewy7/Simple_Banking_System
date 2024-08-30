@@ -5,7 +5,6 @@ import Model.Bank;
 import Model.Account;
 
 public class BalanceForm extends JFrame {
-    
     private JTextField accountNumberField;
     public BalanceForm() {
         setTitle("Check Balance");

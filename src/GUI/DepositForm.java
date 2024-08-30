@@ -1,17 +1,17 @@
 package GUI;
 
 import javax.swing.*;
-import Model.Account;
 import Model.Bank;
+import Model.Account;
 
-public class DepositForme extends JFrame {
+public class DepositForm extends JFrame {
     private JTextField accountNumberField;
     private JTextField amountField;
 
-    public DepositForme() {
+    public DepositForm() {
         setTitle("Deposit");
-        setSize(500, 400);
-        setDefaultCloseOperation(JFrame.DIPOSE_ON_CLOSE);
+        setSize(300, 200);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
@@ -44,7 +44,7 @@ public class DepositForme extends JFrame {
 
         if (account != null) {
             account.deposit(amount);
-            JOptionPane.showMessageDialog(this, "Deposit successful!");
+            JOptionPane.showMessageDialog(this, "Deposit successful! New balance: " + account.getBalance());
         } else {
             JOptionPane.showMessageDialog(this, "Account not found!");
         }

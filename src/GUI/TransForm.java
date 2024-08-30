@@ -4,35 +4,35 @@ import javax.swing.*;
 import Model.Bank;
 import Model.Account;
 
-public class TransferForm extends JFrame {
-    private JTextField fromAccountField;
-    private JTextField toAccountField;
+public class TransForm extends JFrame {
+    private JTextField fromAccountNumberField;
+    private JTextField toAccountNumberField;
     private JTextField amountField;
-    
-    public TransferForm() {
+
+    public TransForm() {
         setTitle("Transfer Funds");
-        setSize(300, 250);
+        setSize(300, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        fromAccountField = new JTextField(20);
-        toAccountField = new JTextField(20);
+        fromAccountNumberField = new JTextField(20);
+        toAccountNumberField = new JTextField(20);
         amountField = new JTextField(20);
 
-        panel.add(new JLabel("Source Account Number: "));
-        panel.add(fromAccountField);
+        panel.add(new JLabel("From Account Number:"));
+        panel.add(fromAccountNumberField);
 
-        panel.add(new JLabel("Target Account Number:"));
-        panel.add(toAccountField);
+        panel.add(new JLabel("To Account Number:"));
+        panel.add(toAccountNumberField);
 
         panel.add(new JLabel("Amount:"));
         panel.add(amountField);
 
         JButton transferButton = new JButton("Transfer");
-        transferButton.addActionListener(e -> transfer());
+        transferButton.addActionListener(e -> transferFunds());
 
         panel.add(transferButton);
         add(panel);
@@ -40,9 +40,9 @@ public class TransferForm extends JFrame {
         setVisible(true);
     }
 
-    private void transfer() {
-        String fromAccountNumber = fromAccountField.getText();
-        String toAccountNumber = toAccountField.getText();
+    private void transferFunds() {
+        String fromAccountNumber = fromAccountNumberField.getText();
+        String toAccountNumber = toAccountNumberField.getText();
         double amount = Double.parseDouble(amountField.getText());
 
         Bank bank = Bank.getInstance();
@@ -52,13 +52,13 @@ public class TransferForm extends JFrame {
         if (fromAccount != null && toAccount != null) {
             if (fromAccount.withdraw(amount)) {
                 toAccount.deposit(amount);
-                JOptionPane.showMessageDialog(this, "Transfer successful!");
-            } else
+                JOptionPane.showMessageDialog(this, "Transfer successful! New balance for " + fromAccountNumber + ": " + fromAccount.getBalance());
+            } else {
                 JOptionPane.showMessageDialog(this, "Insufficient funds!");
-            
-        } else
-            JOptionPane.showMessageDialog(this, "Account not found!");
-        
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "One or both accounts not found!");
+        }
 
         dispose();
     }
