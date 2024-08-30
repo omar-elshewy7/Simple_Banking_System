@@ -4,31 +4,36 @@ import javax.swing.*;
 
 public class App extends JFrame {
     public App() {
-        setTitle("Banking System");
-        setSize(400, 300);
+        setTitle("- Welcome to O6U Banking System -");
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JMenuBar menuBar = new JMenuBar();
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        JMenu accountMenu = new JMenu("Account");
-        JMenuItem createAccount = new JMenuItem("Create Account");
-        JMenuItem deposit = new JMenuItem("Deposit");
-        JMenuItem withdraw = new JMenuItem("Withdraw");
-        JMenuItem checkBalance = new JMenuItem("Check Balance");
+        JButton createAccountButton = new JButton("Create Account");
+        createAccountButton.addActionListener(e -> new AccountForm());
 
-        createAccount.addActionListener(e -> new AccountForm());
-        deposit.addActionListener(e -> new DepositForm());
-        withdraw.addActionListener(e -> new WithdrawForm());
-        checkBalance.addActionListener(e -> new BalanceForm());
+        JButton depositButton = new JButton("Deposit");
+        depositButton.addActionListener(e -> new DepositForm());
 
-        accountMenu.add(createAccount);
-        accountMenu.add(deposit);
-        accountMenu.add(withdraw);
-        accountMenu.add(checkBalance);
+        JButton withdrawButton = new JButton("Withdraw");
+        withdrawButton.addActionListener(e -> new WithdrawForm());
 
-        menuBar.add(accountMenu);
-        setJMenuBar(menuBar);
+        JButton checkBalanceButton = new JButton("Check Balance");
+        checkBalanceButton.addActionListener(e -> new BalanceForm());
+
+        JButton transferButton = new JButton("Transfer Money");
+        transferButton.addActionListener(e -> new TransForm());
+
+        panel.add(createAccountButton);
+        panel.add(depositButton);
+        panel.add(withdrawButton);
+        panel.add(checkBalanceButton);
+        panel.add(transferButton);
+
+        add(panel);
 
         setVisible(true);
     }

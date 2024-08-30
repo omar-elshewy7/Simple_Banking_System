@@ -1,17 +1,17 @@
 package GUI;
 
 import javax.swing.*;
-import Model.Bank;
 import Model.Account;
+import Model.Bank;
 
-public class WithdrawForm extends JFrame {
-    
+public class DepositForme extends JFrame {
     private JTextField accountNumberField;
     private JTextField amountField;
-    public WithdrawForm() {
-        setTitle("Withdraw");
-        setSize(300, 200);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    public DepositForme() {
+        setTitle("Deposit");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.DIPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
@@ -26,16 +26,16 @@ public class WithdrawForm extends JFrame {
         panel.add(new JLabel("Amount:"));
         panel.add(amountField);
 
-        JButton withdrawButton = new JButton("Withdraw");
-        withdrawButton.addActionListener(e -> withdraw());
+        JButton depositButton = new JButton("Deposit");
+        depositButton.addActionListener(e -> deposit());
 
-        panel.add(withdrawButton);
+        panel.add(depositButton);
         add(panel);
 
         setVisible(true);
     }
 
-    private void withdraw() {
+    private void deposit() {
         String accountNumber = accountNumberField.getText();
         double amount = Double.parseDouble(amountField.getText());
 
@@ -43,11 +43,8 @@ public class WithdrawForm extends JFrame {
         Account account = bank.getAccount(accountNumber);
 
         if (account != null) {
-            if (account.withdraw(amount)) {
-                JOptionPane.showMessageDialog(this, "Withdrawal successful!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Insufficient funds!");
-            }
+            account.deposit(amount);
+            JOptionPane.showMessageDialog(this, "Deposit successful!");
         } else {
             JOptionPane.showMessageDialog(this, "Account not found!");
         }

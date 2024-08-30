@@ -4,12 +4,11 @@ import javax.swing.*;
 import Model.Bank;
 import Model.Account;
 
-public class WithdrawForm extends JFrame {
+public class BalanceForm extends JFrame {
     
     private JTextField accountNumberField;
-    private JTextField amountField;
-    public WithdrawForm() {
-        setTitle("Withdraw");
+    public BalanceForm() {
+        setTitle("Check Balance");
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -18,36 +17,27 @@ public class WithdrawForm extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         accountNumberField = new JTextField(20);
-        amountField = new JTextField(20);
 
         panel.add(new JLabel("Account Number:"));
         panel.add(accountNumberField);
 
-        panel.add(new JLabel("Amount:"));
-        panel.add(amountField);
+        JButton checkBalanceButton = new JButton("Check Balance");
+        checkBalanceButton.addActionListener(e -> checkBalance());
 
-        JButton withdrawButton = new JButton("Withdraw");
-        withdrawButton.addActionListener(e -> withdraw());
-
-        panel.add(withdrawButton);
+        panel.add(checkBalanceButton);
         add(panel);
 
         setVisible(true);
     }
 
-    private void withdraw() {
+    private void checkBalance() {
         String accountNumber = accountNumberField.getText();
-        double amount = Double.parseDouble(amountField.getText());
 
         Bank bank = Bank.getInstance();
         Account account = bank.getAccount(accountNumber);
 
         if (account != null) {
-            if (account.withdraw(amount)) {
-                JOptionPane.showMessageDialog(this, "Withdrawal successful!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Insufficient funds!");
-            }
+            JOptionPane.showMessageDialog(this, "Balance: " + account.getBalance());
         } else {
             JOptionPane.showMessageDialog(this, "Account not found!");
         }

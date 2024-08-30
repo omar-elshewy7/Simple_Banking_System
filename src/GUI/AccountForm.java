@@ -4,6 +4,11 @@ import javax.swing.*;
 import Model.Bank;
 
 public class AccountForm extends JFrame {
+    private JTextField nameField;
+    private JTextField phoneNumberField;
+    private JTextField nationalIDField;
+    private JTextField addressField;
+    
     public AccountForm() {
         setTitle("Create Account");
         setSize(400,300);
@@ -11,40 +16,45 @@ public class AccountForm extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        JPanel nameLabel = new JLabel("Nmae: ");
-        JTextField nameField = new JTextField(20);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        JLabel phoneLabel = new JLabel("Phone Number: ");
-        JTextField phoneField = new JTextField(20);
+        nameField = new JTextField(20);
+        phoneNumberField = new JTextField(20);
+        nationalIDField = new JTextField(20);
+        addressField = new JTextField(20);
 
-        JLabel nationalIDLabel = new JLabel("National ID:");
-        JTextField nationalIDField = new JTextField(20);
-
-        JLabel addressLabel = new JLabel("Address: ");
-        JTextField addressField = new JTextField(20);
-
-        JButton createButton = new JButton("Create");
-        createButton.addActionListenter(e -> {
-            String name = nameField.getText();
-            String phoneNumber = phoneField.getText();
-            String nationalID = nationalIDField.getText();
-
-            Bank.getInstance().createAccount(name, phoneNumber, nationalID, address);
-            JOptionPane.showMessageDialog(this, "Account created!");
-        });
-
-        panel.add(nameLabel);
+        panel.add(new JLabel("Name:"));
         panel.add(nameField);
-        panel.add(phoneLabel);
-        panel.add(phoneField);
-        panel.add(nationalIDLabel);
+
+        panel.add(new JLabel("Phone Number:"));
+        panel.add(phoneNumberField);
+
+        panel.add(new JLabel("National ID:"));
         panel.add(nationalIDField);
-        panel.add(addressLabel);
+
+        panel.add(new JLabel("Address:"));
         panel.add(addressField);
+
+        JButton createButton = new JButton("Create Account");
+        createButton.addActionListener(e -> createAccount());
+
         panel.add(createButton);
-
         add(panel);
-        setVisible(true);
 
+        setVisible(true);
+    }
+
+    private void createAccount() {
+        String name = nameField.getText();
+        String phoneNumber = phoneNumberField.getText();
+        String nationalID = nationalIDField.getText();
+        String address = addressField.getText();
+
+        Bank bank = Bank.getInstance();
+        String accountNumber = bank.createAccount(name, phoneNumber, nationalID, address);
+
+        JOptionPane.showMessageDialog(this, "Account created successfully! Your account number is: " + accountNumber);
+
+        dispose();
     }
 }
