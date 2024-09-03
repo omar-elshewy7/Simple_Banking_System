@@ -1,65 +1,74 @@
 package GUI;
 
-import javax.swing.*;
 import Model.Bank;
 import Model.Account;
 
-public class TransForm extends JFrame {
-    private JTextField fromAccountNumberField;
-    private JTextField toAccountNumberField;
-    private JTextField amountField;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-    public TransForm() {
-        setTitle("Transfer Funds");
-        setSize(300, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+public class TransForm extends JPanel {
+    private ResourceBundle messages;
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    public TransForm(Locale locale, CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+        messages = ResourceBundle.getBundle("MessagesBundle", locale);
 
-        fromAccountNumberField = new JTextField(20);
-        toAccountNumberField = new JTextField(20);
-        amountField = new JTextField(20);
+        setLayout(new GridLayout(4, 2, 10, 10));
 
-        panel.add(new JLabel("From Account Number:"));
-        panel.add(fromAccountNumberField);
+        JLabel fromAccountLabel = new JLabel(messages.getString("fromAccount"));
+        JTextField fromAccountField = new JTextField();
+        fromAccountLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(new JLabel("To Account Number:"));
-        panel.add(toAccountNumberField);
+        JLabel toAccountLabel = new JLabel(messages.getString("toAccount"));
+        JTextField toAccountField = new JTextField();
+        toAccountLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(new JLabel("Amount:"));
-        panel.add(amountField);
+        JLabel amountLabel = new JLabel(messages.getString("amount"));
+        JTextField amountField = new JTextField();
+        amountLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        JButton transferButton = new JButton("Transfer");
-        transferButton.addActionListener(e -> transferFunds());
+        JButton transferButton = new JButton(messages.getString("transferFunds"));
+        JButton anotherOperationButton = new JButton(messages.getString("doAnotherOperation"));
 
-        panel.add(transferButton);
-        add(panel);
+        transferButton.addActionListener(e -> {
+            String fromAccountNumber = fromAccountField.getText();
+            String toAccountNumber = toAccountField.getText();
+            Account fromAccount = Bank.getInstance().getAccount(fromAccountNumber);
+            Account toAccount = Bank.getInstance().getAccount(toAccountNumber);
 
-        setVisible(true);
-    }
-
-    private void transferFunds() {
-        String fromAccountNumber = fromAccountNumberField.getText();
-        String toAccountNumber = toAccountNumberField.getText();
-        double amount = Double.parseDouble(amountField.getText());
-
-        Bank bank = Bank.getInstance();
-        Account fromAccount = bank.getAccount(fromAccountNumber);
-        Account toAccount = bank.getAccount(toAccountNumber);
-
-        if (fromAccount != null && toAccount != null) {
-            if (fromAccount.withdraw(amount)) {
-                toAccount.deposit(amount);
-                JOptionPane.showMessageDialog(this, "Transfer successful! New balance for " + fromAccountNumber + ": " + fromAccount.getBalance());
+            if (fromAccount != null && toAccount != null) {
+                double amount = Double.parseDouble(amountField.getText());
+                if (fromAccount.withdraw(amount)) {
+                    toAccount.deposit(amount);
+                    JOptionPane.showMessageDialog(this, messages.getString("transferSuccess"));
+                } else {
+                    JOptionPane.showMessageDialog(this, messages.getString("insufficientFunds"));
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Insufficient funds!");
+                JOptionPane.showMessageDialog(this, messages.getString("accountNotFound"));
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "One or both accounts not found!");
-        }
+        });
+        transferButton.setBackground(Color.ORANGE);
+        transferButton.setForeground(Color.WHITE);
+        transferButton.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        dispose();
+        anotherOperationButton.addActionListener(e -> cardLayout.show(cardPanel, "App"));
+        anotherOperationButton.setBackground(Color.GREEN);
+        anotherOperationButton.setForeground(Color.WHITE);
+        anotherOperationButton.setFont(new Font("Cardamon", Font.BOLD, 15));
+
+        add(fromAccountLabel);
+        add(fromAccountField);
+        add(toAccountLabel);
+        add(toAccountField);
+        add(amountLabel);
+        add(amountField);
+        add(transferButton);
+        add(anotherOperationButton);
     }
 }

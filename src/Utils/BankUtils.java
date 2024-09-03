@@ -2,11 +2,11 @@ package Utils;
 
 import Model.Account;
 import Model.Bank;
+
 import java.io.*;
 import java.util.Map;
 
 public class BankUtils {
-
     private static final String FILE_NAME = "accounts.txt";
 
     public static void saveAccounts() {

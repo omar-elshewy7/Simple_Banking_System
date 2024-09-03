@@ -1,54 +1,72 @@
 package GUI;
 
-import javax.swing.*;
 import Model.Bank;
 import Model.Account;
 
-public class DepositForm extends JFrame {
-    private JTextField accountNumberField;
-    private JTextField amountField;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-    public DepositForm() {
-        setTitle("Deposit");
-        setSize(300, 200);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+public class DepositForm extends JPanel {
+    private ResourceBundle messages;
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    // Constructor to initialize the DepositForm with locale, card layout, and card panel
+    public DepositForm(Locale locale, CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
 
-        accountNumberField = new JTextField(20);
-        amountField = new JTextField(20);
+        // Load the resource bundle based on the selected locale
+        messages = ResourceBundle.getBundle("MessagesBundle", locale);
 
-        panel.add(new JLabel("Account Number:"));
-        panel.add(accountNumberField);
+        // Set the layout of the panel to a grid with 0 rows and 2 columns, with spacing of 10px
+        setLayout(new GridLayout(0, 2, 10, 10));
 
-        panel.add(new JLabel("Amount:"));
-        panel.add(amountField);
+        // Create and configure labels and text fields for account number and deposit amount
+        JLabel accountNumberLabel = new JLabel(messages.getString("accountNumber"));
+        JTextField accountNumberField = new JTextField();
+        accountNumberLabel.setFont(new Font("Cardamon", Font.BOLD, 15)); // Set font style for the label
 
-        JButton depositButton = new JButton("Deposit");
-        depositButton.addActionListener(e -> deposit());
+        JLabel amountLabel = new JLabel(messages.getString("amount"));
+        JTextField amountField = new JTextField();
+        amountLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(depositButton);
-        add(panel);
+        // Create and configure buttons for depositing funds and performing another operation
+        JButton depositButton = new JButton(messages.getString("deposit"));
+        JButton anotherOperationButton = new JButton(messages.getString("doAnotherOperation"));
 
-        setVisible(true);
-    }
+        // Action listener for the deposit button
+        depositButton.addActionListener(e -> {
+            String accountNumber = accountNumberField.getText(); // Get the account number from the input field
+            Account account = Bank.getInstance().getAccount(accountNumber); // Retrieve the account using the account number
+            if (account != null) {
+                double amount = Double.parseDouble(amountField.getText()); // Parse the deposit amount from the input field
+                account.deposit(amount); // Deposit the amount into the account
+                // Show a success message if the deposit is successful
+                JOptionPane.showMessageDialog(this, messages.getString("depositSuccess"));
+            } else {
+                // Show an error message if the account is not found
+                JOptionPane.showMessageDialog(this, messages.getString("accountNotFound"));
+            }
+        });
+        depositButton.setBackground(Color.ORANGE); // Set the background color of the button
+        depositButton.setForeground(Color.WHITE); // Set the text color of the button
+        depositButton.setFont(new Font("Cardamon", Font.BOLD, 15)); // Set the font style of the button text
 
-    private void deposit() {
-        String accountNumber = accountNumberField.getText();
-        double amount = Double.parseDouble(amountField.getText());
+        // Action listener for the "Do Another Operation" button
+        anotherOperationButton.addActionListener(e -> cardLayout.show(cardPanel, "App"));
+        anotherOperationButton.setBackground(Color.GREEN);
+        anotherOperationButton.setForeground(Color.WHITE);
+        anotherOperationButton.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        Bank bank = Bank.getInstance();
-        Account account = bank.getAccount(accountNumber);
-
-        if (account != null) {
-            account.deposit(amount);
-            JOptionPane.showMessageDialog(this, "Deposit successful! New balance: " + account.getBalance());
-        } else {
-            JOptionPane.showMessageDialog(this, "Account not found!");
-        }
-
-        dispose();
+        // Add components to the panel
+        add(accountNumberLabel);
+        add(accountNumberField);
+        add(amountLabel);
+        add(amountField);
+        add(depositButton);
+        add(anotherOperationButton);
     }
 }

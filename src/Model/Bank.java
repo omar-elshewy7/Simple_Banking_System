@@ -1,21 +1,17 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Bank {
+public class Bank implements Serializable {
     private Map<String, Account> accounts = new HashMap<>();
     private static Bank instance = new Bank();
 
-    private Bank() {
-        // accounts = new HashMap<>();
-    }
-    
+    private Bank() {}
+
     public static Bank getInstance() {
-        // if (instance == null) {
-        //     instance = new Bank();
-        // }
         return instance;
     }
 
@@ -35,6 +31,6 @@ public class Bank {
     }
 
     private String generateAccountNumber() {
-        return UUID.randomUUID().toString().substring(0, 8);
+        return UUID.randomUUID().toString().substring(0,5);
     }
 }

@@ -1,6 +1,8 @@
 package Model;
 
-public class Account {
+import java.io.Serializable;
+
+public class Account implements Serializable {
     private String accountNumber;
     private String name;
     private String phoneNumber;
@@ -17,13 +19,10 @@ public class Account {
         this.balance = 0.0;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-    
     public String getAccountNumber() {
         return accountNumber;
     }
+
     public String getName() {
         return name;
     }
@@ -39,28 +38,22 @@ public class Account {
     public String getAddress() {
         return address;
     }
-    
+
     public double getBalance() {
         return balance;
     }
+
     public void deposit(double amount) {
-        balance += amount;
+        if (amount > 0) {
+            balance += amount;
+        }
     }
 
     public boolean withdraw(double amount) {
-        if(balance >= amount){
+        if (amount > 0 && balance >= amount) {
             balance -= amount;
             return true;
         }
         return false;
-    }
-
-    public boolean transfer(Account targetAccount, double amount) {
-        if (withdraw(amount)) {
-            targetAccount.deposit(amount);
-            return true;
-        } 
-        else
-            return false;
     }
 }

@@ -1,46 +1,53 @@
 package GUI;
 
-import javax.swing.*;
 import Model.Bank;
 import Model.Account;
 
-public class BalanceForm extends JFrame {
-    private JTextField accountNumberField;
-    public BalanceForm() {
-        setTitle("Check Balance");
-        setSize(300, 200);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+import javax.swing.*;
+import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+public class BalanceForm extends JPanel {
+    private ResourceBundle messages;
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
 
-        accountNumberField = new JTextField(20);
+    public BalanceForm(Locale locale, CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+        messages = ResourceBundle.getBundle("MessagesBundle", locale);
 
-        panel.add(new JLabel("Account Number:"));
-        panel.add(accountNumberField);
+        setLayout(new GridLayout(3, 2, 10, 10));
 
-        JButton checkBalanceButton = new JButton("Check Balance");
-        checkBalanceButton.addActionListener(e -> checkBalance());
+        JLabel accountNumberLabel = new JLabel(messages.getString("accountNumber"));
+        JTextField accountNumberField = new JTextField();
+        accountNumberLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(checkBalanceButton);
-        add(panel);
+        JButton checkBalanceButton = new JButton(messages.getString("checkBalance"));
+        JButton anotherOperationButton = new JButton(messages.getString("doAnotherOperation"));
+        
+        checkBalanceButton.addActionListener(e -> {
+            String accountNumber = accountNumberField.getText();
+            Account account = Bank.getInstance().getAccount(accountNumber);
+            if (account != null) {
+                JOptionPane.showMessageDialog(this, messages.getString("balance") + ": " + account.getBalance());
+            } else {
+                JOptionPane.showMessageDialog(this, messages.getString("accountNotFound"));
+            }
+        });
+        checkBalanceButton.setBackground(Color.ORANGE);
+        checkBalanceButton.setForeground(Color.WHITE);
+        checkBalanceButton.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        setVisible(true);
-    }
+        anotherOperationButton.addActionListener(e -> cardLayout.show(cardPanel, "App"));
+        anotherOperationButton.setBackground(Color.GREEN);
+        anotherOperationButton.setForeground(Color.WHITE);
+        anotherOperationButton.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-    private void checkBalance() {
-        String accountNumber = accountNumberField.getText();
-
-        Bank bank = Bank.getInstance();
-        Account account = bank.getAccount(accountNumber);
-
-        if (account != null) {
-            JOptionPane.showMessageDialog(this, "Balance: " + account.getBalance());
-        } else {
-            JOptionPane.showMessageDialog(this, "Account not found!");
-        }
-
-        dispose();
+        add(accountNumberLabel);
+        add(accountNumberField);
+        add(checkBalanceButton);
+        add(anotherOperationButton);
     }
 }

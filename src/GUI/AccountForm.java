@@ -1,60 +1,68 @@
 package GUI;
 
-import javax.swing.*;
 import Model.Bank;
+import Model.Account;
 
-public class AccountForm extends JFrame {
-    private JTextField nameField;
-    private JTextField phoneNumberField;
-    private JTextField nationalIDField;
-    private JTextField addressField;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-    public AccountForm() {
-        setTitle("Create Account");
-        setSize(450, 300);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+public class AccountForm extends JPanel {
+    private ResourceBundle messages;
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    public AccountForm(Locale locale, CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+        messages = ResourceBundle.getBundle("MessagesBundle", locale);
 
-        nameField = new JTextField(20);
-        phoneNumberField = new JTextField(20);
-        nationalIDField = new JTextField(20);
-        addressField = new JTextField(20);
+        setLayout(new GridLayout(0, 2, 10, 10));
 
-        panel.add(new JLabel("Name:"));
-        panel.add(nameField);
+        JLabel nameLabel = new JLabel(messages.getString("name"));
+        JTextField nameField = new JTextField();
+        nameLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(new JLabel("Phone Number:"));
-        panel.add(phoneNumberField);
+        JLabel phoneLabel = new JLabel(messages.getString("phoneNumber"));
+        JTextField phoneField = new JTextField();
+        phoneLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(new JLabel("National ID:"));
-        panel.add(nationalIDField);
+        JLabel nationalIDLabel = new JLabel(messages.getString("nationalID"));
+        JTextField nationalIDField = new JTextField();
+        nationalIDLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(new JLabel("Address:"));
-        panel.add(addressField);
+        JLabel addressLabel = new JLabel(messages.getString("address"));
+        JTextField addressField = new JTextField();
+        addressLabel.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        JButton createButton = new JButton("Create Account");
-        createButton.addActionListener(e -> createAccount());
+        JButton createButton = new JButton(messages.getString("createAccount"));
+        createButton.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        panel.add(createButton);
-        add(panel);
+        JButton anotherOperationButton = new JButton(messages.getString("doAnotherOperation"));
+        anotherOperationButton.setFont(new Font("Cardamon", Font.BOLD, 15));
 
-        setVisible(true);
-    }
+        createButton.addActionListener(e -> {
+            String accountNumber = Bank.getInstance().createAccount(
+                    nameField.getText(),
+                    phoneField.getText(),
+                    nationalIDField.getText(),
+                    addressField.getText()
+            );
+            JOptionPane.showMessageDialog(this, messages.getString("accountCreated") + ": " + accountNumber);
+        });
 
-    private void createAccount() {
-        String name = nameField.getText();
-        String phoneNumber = phoneNumberField.getText();
-        String nationalID = nationalIDField.getText();
-        String address = addressField.getText();
+        anotherOperationButton.addActionListener(e -> cardLayout.show(cardPanel, "App"));
 
-        Bank bank = Bank.getInstance();
-        String accountNumber = bank.createAccount(name, phoneNumber, nationalID, address);
-
-        JOptionPane.showMessageDialog(this, "Account created successfully! Your account number is: " + accountNumber);
-
-        dispose();
+        add(nameLabel);
+        add(nameField);
+        add(phoneLabel);
+        add(phoneField);
+        add(nationalIDLabel);
+        add(nationalIDField);
+        add(addressLabel);
+        add(addressField);
+        add(createButton);
+        add(anotherOperationButton);
     }
 }
